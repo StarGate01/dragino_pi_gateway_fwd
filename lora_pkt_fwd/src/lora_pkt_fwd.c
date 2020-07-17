@@ -30,6 +30,7 @@ Maintainer: Michael Coracin
 #include <stdbool.h>        /* bool type */
 #include <stdio.h>          /* printf, fprintf, snprintf, fopen, fputs */
 
+#include <limits.h>         /* MAX_PATH */
 #include <string.h>         /* memset */
 #include <signal.h>         /* sigaction */
 #include <time.h>           /* time, clock_gettime, strftime, gmtime */
@@ -1921,7 +1922,7 @@ void thread_up(void) {
             ++pkt_in_dgram;
             if (!strcmp(server_type, "mqtt") || !strcmp(server_type, "tcpudp") || !strcmp(server_type, "customized")) {  // mqtt mode or tcpudp mode for loraRAW 
                 char tmp[256] = {'\0'};
-                char chan_path[32] = {'\0'};
+                char chan_path[PATH_MAX] = {'\0'};
                 char *chan_id = NULL;
                 char *chan_data = NULL;
                 int id_found = 0, data_size = p->size;
@@ -2873,8 +2874,13 @@ void thread_jit(void) {
                     
                 } else {
                     MSG_DEBUG(DEBUG_ERROR, "ERROR~ jit_dequeue failed with %d\n", jit_result);
+                    wait_ms(10);
                 }
-            }
+            } else { /* pkt_index < 0 */
+//                MSG_DEBUG(DEBUG_ERROR, "ERROR~ jit_peek failed: pkt_index=%i\n", pkt_index);
+                /* seems to be normal in idle condition, too */
+                wait_ms(10);
+             }
         } else if (jit_result == JIT_ERROR_EMPTY) {
             wait_ms(10);
             /* Do nothing, it can happen */
@@ -2961,6 +2967,7 @@ void thread_gps(void) {
         /* blocking non-canonical read on serial port */
         ssize_t nb_char = read(gps_tty_fd, serial_buff + wr_idx, LGW_GPS_MIN_MSG_SIZE);
         if (nb_char <= 0) {
+            wait_ms(10); /* don't eat all my CPU */
             MSG_DEBUG(DEBUG_WARNING, "WARNING: [gps] read() returned value %d\n", nb_char);
             continue;
         }
