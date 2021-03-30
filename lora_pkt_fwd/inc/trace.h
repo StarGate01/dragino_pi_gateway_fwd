@@ -19,13 +19,13 @@ Maintainer: Michael Coracin
 
 #define DEBUG_PKT_FWD   1
 #define DEBUG_JIT       0
-#define DEBUG_JIT_ERROR 0
+#define DEBUG_JIT_ERROR 1
 #define DEBUG_TIMERSYNC 0
-#define DEBUG_BEACON    0
+#define DEBUG_BEACON    1
 #define DEBUG_LOG       0
-#define DEBUG_INFO      0
+#define DEBUG_INFO      1
 #define DEBUG_PPM       0
-#define DEBUG_WARNING   0
+#define DEBUG_WARNING   1
 #define DEBUG_ERROR     1
 #define DEBUG_GPS_FWD   1
 
