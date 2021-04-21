@@ -1,15 +1,17 @@
 [Unit]
-Description=packet forwarder
+Description=LoRa packet forwarder
 Wants=network-online.target
 After=network-online.target
 
 [Service]
 Restart=always
 RestartSec=30
-WorkingDirectory=/home/pi/dragino_pi_gateway_fwd/lora_pkt_fwd/
-ExecStartPre=reset_lgw.sh start 
-ExecStart=lora_pkt_fwd
-ExecStopPost=reset_lgw.sh stop
+WorkingDirectory=/home/pi/dragino_pi_gateway_fwd/lora_pkt_fwd
+ExecStartPre=/home/pi/dragino_pi_gateway_fwd/reset_lgw.sh start 
+ExecStart=/home/pi/dragino_pi_gateway_fwd/lora_pkt_fwd/lora_pkt_fwd
+ExecStopPost=/home/pi/dragino_pi_gateway_fwd/reset_lgw.sh stop
+User=pi
+Group=pi
 
 [Install]
 WantedBy=multi-user.target
